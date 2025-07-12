@@ -1,0 +1,6 @@
+adapters.npz
+*.pyc
+.DS_Store
+backup
+chroma
+env/
