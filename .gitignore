@@ -1,4 +1,4 @@
-adapters.npz
+# adapters.npz
 *.pyc
 .DS_Store
 backup

@@ -300,7 +300,7 @@ def train(model, train_set, val_set, optimizer, loss, tokenizer, args):
         # Save adapter weights if needed
         if (it + 1) % args.save_every == 0:
             mx.savez(
-                args.adapter_file, **dict(tree_flatten(model.trainable_parameters()))
+                'adapters.npz', **dict(tree_flatten(model.trainable_parameters()))
             )
             print(f"Iter {it + 1}: Saved adapter weights to {args.adapter_file}.")
 
@@ -402,9 +402,9 @@ if __name__ == "__main__":
         # Optionally retrieve context documents
         prompt_text = args.prompt
         if args.use_rag:
-            contexts = lora_utils.retrieve_documents(args.prompt, k=10)
+            contexts = lora_utils.retrieve_documents(args.prompt, k=5)
             prompt = "\n\n".join(contexts) + "\n\n" + args.prompt
-            print("fullPrompt", prompt)
+            # print("fullPrompt", prompt)
         else:
             prompt = args.prompt
         print("Generating")

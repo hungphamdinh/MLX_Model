@@ -1,10 +1,27 @@
-{"text":"Q: Why does the Reminder component initialize newReminderBefore and newReminderAfter to defaultCost? A: To provide a sensible starting value for the number inputs so users see a default before entering custom values."}
-{"text":"Q: How does the sanitizeInput function in ConfigRecurrenceModal ensure numeric inputs remain valid? A: It strips trailing dots or commas from the text, preventing invalid characters in numeric fields."}
-{"text":"Q: What is the purpose of the term(str, char) helper in ConfigRecurrenceModal? A: It replaces the last character of a string with another, used to sanitize text inputs by removing unwanted punctuation."}
-{"text":"Q: Why does attemptSave in useApprovalHandling check config.some(f => f.isAllowApprove)? A: To determine if any changed field requires approval before submitting, showing the modal only when necessary."}
-{"text":"Q: How does handlerMap.ids handle missing labels for IDs? A: It filters out undefined results after mapping, so only valid labels are joined in the output string."}
-{"text":"Q: What does FormDisabledProvider do when isReadOnly=true? A: It disables all nested form fields by passing down a disabled flag, preventing any user edits."}
-{"text":"Q: How does the useEffect in Reminder notify its parent of changes? A: It subscribes via watch and calls onChange(value) on every form update, so the parent receives the latest reminder state."}
-{"text":"Q: Why use React.Children.map with clone in FormFieldConfigurable? A: To recursively traverse and inject new props into every nested child element based on config rules."}
-{"text":"Q: What role does FieldPrefixProvider’s excludeKeys prop play? A: It lists fieldKeys that should not receive the prefix, allowing selective prefixing control."}
-{"text":"Q: How does onChangeTenantId react to isPublic changes? A: It re-fetches team or assignee lists for the current tenant whenever the public/site toggle flips, keeping dropdowns in sync."}
+{"text":"// ===== TaskManagement ====="}
+{"text":"// ===== API Handler Wrappers ====="}
+{"text":"Q: Why is generateAction used for GET_TASK_LIST? A: To produce consistent REQUEST, SUCCESS, and FAILURE action types automatically without manual string concatenation."}
+{"text":"// ===== Action & Saga Integration ====="}
+{"text":"Q: What saga effect handles GET_PRIORITY_LIST.REQUEST? A: takeEvery(GET_PRIORITY_LIST.REQUEST, handleGetPriorityList) triggers the priority fetch and dispatches corresponding SUCCESS or FAILURE actions."}
+{"text":"// ===== Reducer & State Management ====="}
+{"text":"Q: How does GET_TEAMS_BY_TENANT.SUCCESS impact state? A: It calls transformWithCOTags on the payload and assigns the result to state.teamList for UI consumption."}
+{"text":"// ===== Business Logic & Side Effects ====="}
+{"text":"Q: What side effect does addTask trigger after the API call? A: It uploads associated files and then navigates back via NavigationServices.goBack()."}
+{"text":"// ===== Feedback ====="}
+{"text":"// ===== API Handler Wrappers ====="}
+{"text":"Q: How is getSources implemented in useFeedback? A: It dispatches GET_SOURCES_REQUEST, calls RequestApi.getFeedbackSources, then dispatches GET_SOURCES_SUCCESS or GET_SOURCES_FAILURE."}
+{"text":"// ===== Action & Saga Integration ====="}
+{"text":"Q: Which watcher handles GET_TYPES_REQUEST? A: takeEvery(GET_TYPES_REQUEST, handleGetTypes) listens for GET_TYPES_REQUEST to fetch types and dispatch GET_TYPES_SUCCESS or FAILURE."}
+{"text":"// ===== Reducer & State Management ====="}
+{"text":"Q: What does DETAIL_FB_QR_SUCCESS do in the reducer? A: It sets state.qrFBDetail = payload and isLoading = false, marking the QR feedback detail as loaded."}
+{"text":"// ===== Business Logic & Side Effects ====="}
+{"text":"Q: Why does editQrFB return true on success? A: To signal the calling component that the QR feedback edit operation completed successfully."}
+{"text":"// ===== Booking ====="}
+{"text":"// ===== API Handler Wrappers ====="}
+{"text":"Q: What wrapper is used for getAmenities? A: withErrorHandling(GET_AMENITIES, getAmenities) ensures GET_AMENITIES.REQUEST, SUCCESS, and FAILURE actions are dispatched around the API call."}
+{"text":"// ===== Action & Saga Integration ====="}
+{"text":"Q: Which saga watches VALIDATE_RECURRING_BOOKING.REQUEST? A: takeEvery(VALIDATE_RECURRING_BOOKING.REQUEST, handleValidateRecurringBooking) triggers pre-validation of a recurring booking."}
+{"text":"// ===== Reducer & State Management ====="}
+{"text":"Q: How does FILTER_BOOKINGS.SUCCESS update state? A: It invokes state.list.setData(payload) and deep-clones the list to apply the new filtered booking items immutably."}
+{"text":"// ===== Business Logic & Side Effects ====="}
+{"text":"Q: Why upload booking files only after addBooking response? A: Because the response provides a GUID needed to correctly associate the uploaded files with the new booking."}
