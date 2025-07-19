@@ -1,27 +1,10 @@
-{"text":"// ===== TaskManagement ====="}
-{"text":"// ===== API Handler Wrappers ====="}
-{"text":"Q: Why use withErrorHandling(GET_TASK_LIST, getTaskList)? A: To automatically dispatch GET_TASK_LIST.REQUEST before the API call and GET_TASK_LIST.SUCCESS or GET_TASK_LIST.FAILURE after, centralizing error and lifecycle handling."}
-{"text":"// ===== Action & Saga Integration ====="}
-{"text":"Q: Which saga watcher handles ADD_TASK.REQUEST? A: A watcher using takeEvery(ADD_TASK.REQUEST, handleAddTask) invokes the addTask worker, uploads files, navigates back, and dispatches ADD_TASK.SUCCESS or ADD_TASK.FAILURE."}
-{"text":"// ===== Reducer & State Management ====="}
-{"text":"Q: How does the reducer respond to GET_TASK_DETAIL.SUCCESS? A: It sets state.taskDetail = payload, storing the fetched task details in the Redux store."}
-{"text":"// ===== Business Logic & Side Effects ====="}
-{"text":"Q: Why call NavigationServices.goBack() after updateTask? A: To navigate back automatically once the task update and any file uploads complete successfully, ensuring a smooth UX."}
-{"text":"// ===== Feedback ====="}
-{"text":"// ===== API Handler Wrappers ====="}
-{"text":"Q: How does detailFB(id) wrap its API call? A: It dispatches DETAIL_FB.REQUEST(id), calls RequestApi.getDetailFB(id), then dispatches DETAIL_FB.SUCCESS(response) or DETAIL_FB.FAILURE(err) within a try/catch."}
-{"text":"// ===== Action & Saga Integration ====="}
-{"text":"Q: Which saga listens for GET_LIST_FB_REQUEST? A: A watcher saga with takeEvery(GET_LIST_FB_REQUEST, handleGetListFB) calls the getListFB worker and dispatches GET_LIST_FB.SUCCESS or GET_LIST_FB.FAILURE."}
-{"text":"// ===== Reducer & State Management ====="}
-{"text":"Q: What does GET_LIST_FB_SUCCESS do in the reducer? A: It calls state.list.setData(payload) on the ListModel and returns a deep clone, updating the feedback list in state."}
-{"text":"// ===== Business Logic & Side Effects ====="}
-{"text":"Q: Why upload files only after createFeedback returns a GUID? A: Because the new feedback GUID is required to associate uploaded files correctly, so uploads occur only on successful creation."}
-{"text":"// ===== Booking ====="}
-{"text":"// ===== API Handler Wrappers ====="}
-{"text":"Q: What does validateRecurringBooking wrap and dispatch? A: It wraps RequestApi.validateRecurringBooking(payload) and, with withLoadingAndErrorHandling(VALIDATE_RECURRING_BOOKING), dispatches VALIDATE_RECURRING_BOOKING.REQUEST, SUCCESS, or FAILURE around the call."}
-{"text":"// ===== Action & Saga Integration ====="}
-{"text":"Q: Which saga watcher handles FILTER_BOOKINGS.REQUEST? A: takeEvery(FILTER_BOOKINGS.REQUEST, handleFilterBookings) is used to fetch filtered bookings and dispatch FILTER_BOOKINGS.SUCCESS or FILTER_BOOKINGS.FAILURE."}
-{"text":"// ===== Reducer & State Management ====="}
-{"text":"Q: How does GET_ALL_TIMESLOTS.SUCCESS update the reducer? A: It sets state.bookingSlots = payload, storing the fetched timeslot availability in Redux state."}
-{"text":"// ===== Business Logic & Side Effects ====="}
-{"text":"Q: Why dispatch resetBookingDetailRequest on unmount? A: To clear state.bookingDetail, preventing stale reservation details from appearing when revisiting the booking screen."}
+{"text":"Q: How does the `SlotView` component determine how many slots have been selected? A: It uses `useMemo` to count `slots.filter(item => item.isCheck).length` and stores it in `totalSelected`, recomputing only when `slots` changes."}
+{"text":"Q: What condition makes the “flag” icon appear on a slot? A: `showFlag` becomes true when `totalSelected > 0 && totalSelected < numberSlot`, and each unselected slot adjacent to a selected one gets `isFlag=true`, causing `<SlotFlag/>` to render."}
+{"text":"Q: How does `FormSlotView` integrate `SlotView` into React Hook Form? A: It uses `useCommonFormController(name)` to get `value`/`setFieldValue`, wraps `SlotView` in `<FormControl>`, and in `onSlotsChange` calls `setFieldValue(newSlots)` plus any `onChange` prop."}
+{"text":"Q: How is `calculateDepositPrice` memoized? A: Wrapped in `useCallback` depending only on `slots`, so the reference changes only when slots array changes."}
+{"text":"Q: What happens when the user taps a slot? A: `onSelectSlot(index)` toggles `isCheck` for that slot, clears other checks if selecting a non-flag new slot, then recomputes `isFlag` for neighbors before calling `onSlotsChange([...slots])`."}
+{"text":"Q: How does the component decide between “Add” and “Edit” mode at startup? A: It reads `useRoute().name` and sets `isAddNew = (name==='addBooking')`, `isEdit = (name==='editBooking')`. This controls which effects run, which UI elements display, and whether `addBooking` or `updateBooking` is called."}
+{"text":"Q: Which pieces of data must be loaded before rendering the form, and how is loading handled? A: `amenityDetail` (to know available slots, deposit rules), `bookingSlots` (initial slot availability), and reference files. A `<LoaderContainer>` wraps the form, showing `<BookingLoading>` until `amenityDetail` is truthy."}
+{"text":"Q: How are `startDate` and `endDate` computed for a new booking? A: They derive from the first and last checked slot’s `startTime` and `endTime` respectively, inside `onSave` when `isAddNew` is true."}
+{"text":"Q: What logic handles recurring bookings inside `onSave`? A: If `formValues.recurrence` exists, `onSave` calls `await recurringBooking(formValues, payload)` and returns early, skipping the single-date API call."}
+{"text":"Q: How does `validateRecurringBooking` integrate with `statusList`? A: The call returns `res.status` code; `matchedStatus` is found via `statusList.find` to get the human-readable status name for the confirmation modal."}

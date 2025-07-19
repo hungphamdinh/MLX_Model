@@ -104,7 +104,7 @@ def build_parser():
     parser.add_argument(
         "--adapter-file",
         type=str,
-        default="adapters.npz",
+        default="adapters3.npz",
         help="Save/load path for the trained adapter weights.",
     )
     parser.add_argument(
@@ -300,7 +300,7 @@ def train(model, train_set, val_set, optimizer, loss, tokenizer, args):
         # Save adapter weights if needed
         if (it + 1) % args.save_every == 0:
             mx.savez(
-                'adapters.npz', **dict(tree_flatten(model.trainable_parameters()))
+                'adapters3.npz', **dict(tree_flatten(model.trainable_parameters()))
             )
             print(f"Iter {it + 1}: Saved adapter weights to {args.adapter_file}.")
 
